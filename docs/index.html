@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Ninja - Browser Ninja</title>
+    <meta name="description" content="Ask to change something on a webpage, Browser Ninja will get it done A chrome extension sidepanel that is trained to understand your ask and get it done properly. Simply tell it what you want to change, and watch it figure out exactly what is needed. Perfect for building a proof of concept, mockups, A/B& tests, or simply adding something to your page.">
+    <link rel="icon" href="assets/icon.png">
+    <link href="https://fonts.googleapis.com/css?family=Inter:400,700,300,900,500" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            color: #444;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        header {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #1b2a3f;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #97cc35;
+        }
+
+        .hero {
+            background: linear-gradient(180deg, rgb(239, 249, 235) 0%, rgb(255, 255, 255) 100%);
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 60vh;
+        }
+
+        .hero-content {
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero h3 {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .hero-video {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background-color: #172538;
+            color: #97cc35;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s, color 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.18);
+            background-color: #172538;
+            color: #97cc35;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid #1b2a3f;
+            color: #1b2a3f;
+        }
+
+        .cta-button.secondary:hover {
+            background-color: #1b2a3f;
+            color: white;
+        }
+
+        .video-section {
+            background-color: #f2f2f2;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+        }
+
+        .features-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            color: #1b2a3f;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #1b2a3f;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .examples-section {
+            padding: 4rem 2rem;
+            background-color: #f9fafb;
+        }
+
+        .examples-scroll {
+            width: 100%;
+            margin: 0 auto;
+            max-width: 900px;
+            height: 260px;
+            overflow-x: scroll !important;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #97cc35 #f9fafb;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .examples-scroll * {
+            box-sizing: border-box;
+        }
+
+        .examples-track {
+            display: flex;
+            gap: 32px;
+            will-change: transform;
+        }
+
+        .examples-scroll::-webkit-scrollbar {
+            height: 10px;
+            display: block;
+        }
+
+        .examples-scroll::-webkit-scrollbar-thumb {
+            background: #97cc35;
+            border-radius: 6px;
+        }
+
+        .examples-scroll::-webkit-scrollbar-track {
+            background: #f9fafb;
+        }
+
+        .example-card {
+            min-width: 320px;
+            max-width: 320px;
+            background: #f9fafb;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.07);
+            padding: 32px 24px 24px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            transition: box-shadow 0.2s;
+        }
+
+        .example-card:hover {
+            box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.12);
+        }
+
+        .example-app {
+            font-size: 17px;
+            font-weight: 700;
+            color: #97cc35;
+            margin-bottom: 8px;
+        }
+
+        .example-desc {
+            font-size: 16px;
+            color: #222;
+            margin-bottom: 20px;
+        }
+
+        .example-prompts {
+            font-size: 14px;
+            color: #888;
+            margin-top: auto;
+        }
+
+        .why-section {
+            padding: 4rem 2rem;
+        }
+
+        .why-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .why-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .why-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .why-card img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 1rem;
+        }
+
+        .why-card h3 {
+            color: #1b2a3f;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .why-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .instructions-section {
+            padding: 4rem 2rem;
+            background: linear-gradient(180deg, rgb(239, 249, 235) 0%, rgb(255, 255, 255) 100%);
+            color: #444;
+        }
+
+        .instructions-section .section-title h2 {
+            color: #1b2a3f;
+        }
+
+        .instructions-section .section-title p {
+            color: #666;
+        }
+
+        .instructions-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .instruction-card {
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .instruction-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .instruction-card h3 {
+            color: #1b2a3f;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .instruction-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .instructions-section .easy-steps {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .easy-steps ol {
+            color: #666;
+            line-height: 1.8;
+            padding-left: 1.5rem;
+        }
+
+        .easy-steps ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        .easy-steps a {
+            color: #97cc35;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .easy-steps a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background-color: #1b2a3f;
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        footer a {
+            color: #ccc;
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: #97cc35;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-content img {
+            height: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero h3 {
+                font-size: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .features-grid,
+            .why-grid,
+            .instructions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .examples-scroll {
+                height: 220px;
+            }
+
+            .example-card {
+                min-width: 90vw;
+                max-width: 90vw;
+            }
+
+            .hero {
+                padding: 3rem 1rem;
+            }
+
+            .hero-content {
+                padding: 2rem;
+            }
+        }
+
+        .hero h1 {
+            color: #1b2a3f;
+        }
+
+        .hero h3 {
+            color: #444;
+        }
+
+        /* Small responsive tweak to match remote spacing */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1rem;
+            }
+
+            .hero-content {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="#" class="logo">
+                <img src="assets/icon_logoblack.png" alt="Browser Ninja">
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="https://github.com/jatacid/time-to-touch-grass" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div style="margin: 0 auto; display: flex; flex-direction: column; align-items: center; width: 100%; gap: 2rem;">
+            <div class="hero-content">
+                <img src="assets/icon_128.png" alt="icon_128" style="width: 129px; margin-bottom: 1rem;">
+                <h1>A chrome extension to help you edit the web</h1>
+
+                <h3><span style="font-family: arial, helvetica, sans-serif; font-weight: 400;">Simply tell Ninja what you want to change, and it'll ask more questions before building you a snippet</span></h3>
+                <h3><span style="font-family: arial, helvetica, sans-serif; font-weight: 400;">Perfect for </span><span style="font-family: arial, helvetica, sans-serif; font-weight: 400;">building a proof of concept, mockups, A/B tests, or simply adding something to your page.</span></h3>
+                <div class="cta-buttons">
+                    <a href="https://github.com/jatacid/time-to-touch-grass/releases" class="cta-button">Get Browser Ninja (Chrome)</a>
+                    <a href="#features" class="cta-button secondary">Learn More</a>
+                </div>
+            </div>
+            <div class="hero-video">
+                <video controls autoplay loop muted style="width: 100%;">
+                    <source src="assets/Google.webm" type="video/webm">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+    </section>
+
+    <section id="features" class="features-section">
+        <div class="section-title">
+            <h2>Who is Browser Ninja for?</h2>
+            <p>Whether you're building something, creating a proof of concept<br>or automating workflows, Browser Ninja will make the web work better for you</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <img src="assets/33.png" alt="33">
+                <h3>Product Managers</h3>
+                <p>Communicate design ideas visually with working prototypes. If you know how to use devtools you can get a significant way there before committing resources.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/44.png" alt="44">
+                <h3>UX/UI Designers</h3>
+                <p>Test design concepts directly on live sites. Copy paste your figma snippets directly to see how components feel in-situ.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/22.png" alt="22">
+                <h3>Curious Tinkerer</h3>
+                <p>Change what you see and how you interact with your websites. The convenience of scripts right in-situ cannot be understated.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/55.png" alt="55">
+                <h3>Power Users</h3>
+                <p>Customize your favorite websites to work exactly how you want. Remove distractions, simplify repetitive tasks, create genius snippets that help your browsing experience.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/22.png" alt="22">
+                <h3>Frontend Developers</h3>
+                <p>Build tests faster with live element inspection and instant code generation. Perfect for complex mutation observers, component extraction, and rapid prototyping.</p>
+            </div>
+            <div class="feature-card">
+                <img src="assets/66.png" alt="66">
+                <h3>Digital Agencies</h3>
+                <p>Speed up client presentations and approval cycles. Create snippets that can be demonstrated to clients during calls iterate on feedback in real-time.</p>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <section class="examples-section">
+        <div class="section-title">
+            <h2>See what you can do with Browser Ninja</h2>
+        </div>
+        <div class="examples-scroll">
+            <div class="examples-track">
+                <div class="example-card">
+                    <div class="example-app">Airbnb</div>
+                    <div class="example-desc">A snippet which appends the price in 'per person per night' to help organise group bookings</div>
+                    <div class="example-prompts">Four prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">Grocery retailer</div>
+                    <div class="example-desc">A snippet which makes the search bar sticky and always visible while building a cart</div>
+                    <div class="example-prompts">Six prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">LinkedIn</div>
+                    <div class="example-desc">A snippet which auto-expands all 'see more' buttons on job posts for faster scanning</div>
+                    <div class="example-prompts">Three prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">YouTube</div>
+                    <div class="example-desc">A snippet which hides all comments and suggested videos for distraction-free watching</div>
+                    <div class="example-prompts">Two prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">Amazon</div>
+                    <div class="example-desc">A snippet which highlights products with the best reviews and hides sponsored listings</div>
+                    <div class="example-prompts">Five prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">Twitter/X</div>
+                    <div class="example-desc">A snippet which auto-hides promoted tweets to keep the feed clean</div>
+                    <div class="example-prompts">Two prompts</div>
+                </div>
+                <div class="example-card">
+                    <div class="example-app">Notion</div>
+                    <div class="example-desc">A snippet which auto-collapses all toggles on page load for a cleaner workspace</div>
+                    <div class="example-prompts">Three prompts</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="why-section">
+        <div class="section-title">
+            <h2>Why you should use Browser Ninja</h2>
+            <p>Saves so much time! Just Point, Click, Chat & Save!</p>
+        </div>
+        <div class="why-grid">
+            <div class="why-card">
+                <img src="assets/Screenshot-2025-08-31-122559.png" alt="Screenshot 2025-08-31 122559">
+                <h3>Point & Click</h3>
+                <p>Pick items and it'll know what to do with them. If not, Ninja knows how to gather more info!</p>
+            </div>
+            <div class="why-card">
+                <img src="assets/Screenshot-2025-08-31-122630.png" alt="Screenshot 2025-08-31 122630">
+                <h3>Boosted Productivity</h3>
+                <p>Generate snippets and supercharge your productivity. Reduce days of tweaking custom code snippets down to a few prompts.</p>
+            </div>
+            <div class="why-card">
+                <img src="assets/Screenshot-2025-08-31-122635.png" alt="Screenshot 2025-08-31 122635">
+                <h3>Ninja has been well trained</h3>
+                <p>Ninja comes with a detailed system prompt that has best practices for snippets. Meaning they'll work for professional release too!</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="instructions-section">
+        <div class="section-title">
+            <h2>Instructions</h2>
+            <p>Get started in minutes</p>
+        </div>
+        <div class="instructions-grid">
+            <div class="instruction-card">
+                <img src="assets/1.png" alt="1">
+                <h3>Pick Elements</h3>
+                <p>Highlight any element in your devtools that you want to modify.</p>
+            </div>
+            <div class="instruction-card">
+                <img src="assets/2.png" alt="2">
+                <h3>Generate Snippets</h3>
+                <p>Chat about your elements and Ninja will give you snippets to run.</p>
+            </div>
+            <div class="instruction-card">
+                <img src="assets/3.png" alt="3">
+                <h3>Save & Run Code</h3>
+                <p>Execute snippets directly from the chat, and save snippets to auto-run the next time you visit.</p>
+            </div>
+        </div>
+        <h3 style="text-align: center; margin: 3rem 0 1rem; color: #1b2a3f;">Yes, it's that easy!</h3>
+        <div class="easy-steps">
+            <ol>
+                <li>Get the Chrome extension download (as a .zip) and extract to a folder.</li>
+                <li>Visit <a href="chrome://extensions/">chrome://extensions/</a> and toggle on the 'Developer Mode' (top right corner)</li>
+                <li>Click 'Load unpacked' (top left corner) and select your extracted folder.</li>
+                <li>Optional - Pin the chrome extension's icon.</li>
+                <li>Press the ninja extension icon on a webpage you want to edit!</li>
+                <li>Using the extension is easy - simply add your api key, attach context to your chat by capturing your elements, and explain what kind of snippet you'd like.</li>
+            </ol>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <img src="assets/icon_logowhite.png" alt="Browser Ninja">
+            <span>Brought to you by</span>
+            <img src="assets/Logo_Medium.png" alt="J7Digital">
+        </div>
+        <div>
+            <a href="privacy-policy.html">Privacy Policy</a>
+            <a href="https://github.com/jatacid/time-to-touch-grass" target="_blank">GitHub</a>
+        </div>
+    </footer>
+</body>
+
+</html>

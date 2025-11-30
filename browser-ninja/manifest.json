@@ -1,0 +1,47 @@
+{
+    "manifest_version":  3,
+    "name":  "Browser Ninja",
+    "version":  "1.0.5",
+    "description":  "Developer companion tool for creating snippets that modify pages.",
+    "permissions":  [
+                        "storage",
+                        "activeTab",
+                        "scripting",
+                        "tabs",
+                        "sidePanel"
+                    ],
+    "host_permissions":  [
+                             "\u003call_urls\u003e"
+                         ],
+    "background":  {
+                       "service_worker":  "background.js"
+                   },
+    "action":  {
+                   "default_icon":  "assets/icons/icon_48.png"
+               },
+    "icons":  {
+                  "16":  "assets/icons/icon_16.png",
+                  "32":  "assets/icons/icon_32.png",
+                  "48":  "assets/icons/icon_48.png",
+                  "128":  "assets/icons/icon_128.png",
+                  "1024":  "assets/icons/icon_1024.png"
+              },
+    "side_panel":  {
+                       "default_path":  "sidepanel.html"
+                   },
+    "devtools_page":  "devtools.html",
+    "content_security_policy":  {
+                                    "extension_pages":  "script-src \u0027self\u0027; object-src \u0027self\u0027"
+                                },
+    "content_scripts":  [
+                            {
+                                "matches":  [
+                                                "\u003call_urls\u003e"
+                                            ],
+                                "js":  [
+                                           "content-buildNodeInfo.js"
+                                       ],
+                                "run_at":  "document_idle"
+                            }
+                        ]
+}
