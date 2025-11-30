@@ -71,6 +71,12 @@ Browser Ninja builds JavaScript snippets in the format `[trigger[observer[code]]
 
 Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
+## Support
+
+If you find Browser Ninja helpful, consider buying me a coffee:
+
+[☕ Donate](https://www.paypal.com/donate/?hosted_button_id=9VFG2KJ8HW6EW)
+
 ## License
 
 [MIT](LICENSE)
