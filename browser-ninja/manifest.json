@@ -1,7 +1,7 @@
 {
     "manifest_version":  3,
     "name":  "Browser Ninja",
-    "version":  "1.0.5",
+    "version":  "1.0.6",
     "description":  "Developer companion tool for creating snippets that modify pages.",
     "permissions":  [
                         "storage",
