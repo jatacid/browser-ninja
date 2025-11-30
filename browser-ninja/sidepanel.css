@@ -799,6 +799,9 @@ textarea:focus {
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
   background: #f8fafc;
+  position: sticky;
+  top: -10px;
+  z-index: 10;
 }
 
 .bn-chat-messages {
