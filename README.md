@@ -1,6 +1,6 @@
 # Browser Ninja
 
-[**Website**](https://jatacid.github.io/browser-ninja) | [**GitHub**](https://github.com/jatacid/time-to-touch-grass)
+[**Website**](https://jatacid.github.io/browser-ninja)
 
 **Ask to change something on a webpage, Browser Ninja will get it done.**
 
